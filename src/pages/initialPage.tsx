@@ -6,10 +6,15 @@ import { MdOutlineAddAPhoto } from "react-icons/md";
 import InputWithIcon from "../components/InputWithIcon";
 import { FaRegUser } from "react-icons/fa";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { IoMdSettings } from "react-icons/io";
+import Button from "../components/Button";
+import SettingsButton from "../components/SettingsButton";
+import { useNavigate } from "react-router-dom";
 import { GiOpenBook } from "react-icons/gi";
 
 export default function InitialPage() {
+  const navigate = useNavigate();
+  function uploadPhoto() {}
+
   return (
     <Page>
       <header className="mt-16">
@@ -26,6 +31,7 @@ export default function InitialPage() {
             Icon={MdOutlineAddAPhoto}
             size={24}
             className="bg-white absolute -left-4 -bottom-4 border-2 border-sky-500"
+            onClick={uploadPhoto}
           />
         </div>
 
@@ -45,11 +51,9 @@ export default function InitialPage() {
       </main>
 
       <footer className="flex items-center justify-between ">
-        <RoundedIcon Icon={IoMdSettings} size={36} />
+        <SettingsButton />
 
-        <button className="bg-sky-700 text-white font-semibold rounded-xl py-4 px-8 text-2xl hover:bg-sky-900 transition-all duration-300">
-          Entrar
-        </button>
+        <Button text="Entrar" onClick={() => navigate("/PinEntryScreen")} />
 
         <RoundedIcon Icon={GiOpenBook} size={36} />
       </footer>
