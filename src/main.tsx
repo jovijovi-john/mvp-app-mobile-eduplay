@@ -8,6 +8,8 @@ import LoadingScreen from "./pages/LoadingScreen";
 import PinEntryScreen from "./pages/PinEntryScreen";
 import FourOptionQuestion from "./pages/FourOptionQuestion ";
 import TwoOptionQuestion from "./pages/TwoOptionQuestion";
+import ResultQuestion from "./pages/ResultQuestion";
+import PageTest from "./pages/PageTest";
 
 const router = createBrowserRouter([
   {
@@ -19,12 +21,12 @@ const router = createBrowserRouter([
     element: <WelcomeScreen />,
   },
   {
-    path: "LoadingScreen",
-    element: <LoadingScreen />,
-  },
-  {
     path: "PinEntryScreen",
     element: <PinEntryScreen />,
+  },
+  {
+    path: "LoadingScreen",
+    element: <LoadingScreen />,
   },
   {
     path: "FourOptionQuestion",
@@ -33,6 +35,14 @@ const router = createBrowserRouter([
   {
     path: "TwoOptionQuestion",
     element: <TwoOptionQuestion />,
+  },
+  {
+    path: "ResultQuestion",
+    element: <ResultQuestion />,
+  },
+  {
+    path: "PageTest",
+    element: <PageTest />,
   },
 ]);
 

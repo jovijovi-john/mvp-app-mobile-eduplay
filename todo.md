@@ -1,0 +1,6 @@
+- a parte da contagem de tempo vai ficar na tv, apos x tempo o questionario iniciará
+- um evento será emitido e todos da sala serão redirecionados para a tela de resposta correspondente
+- se a questão for de dupla resposta, irá para uma tela
+- se for de 4 respostas, irá para outra
+- quando chegar a próxima questão, o evento será emitido pela tv novamente, e o server emitirá a todos para ir para a tela da próxima questão
+- no final, guardando a taxa de acerto de cada um, mostrará estatisticas individuais (taxa de acerto)
