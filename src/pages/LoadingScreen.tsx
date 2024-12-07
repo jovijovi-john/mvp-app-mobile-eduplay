@@ -31,6 +31,7 @@ export default function LoadingScreen() {
 
     socket.on("send-users-room", (data) => {
       const usersArray = Object.values(data.users) as UserType[];
+      console.log(data);
       setUsers(usersArray);
     });
 
@@ -74,8 +75,13 @@ export default function LoadingScreen() {
         <span className="text-2xl font-semibold text-white">
           Aguardando jogadores...
         </span>
+
         {users.map((user) => (
-          <PlayerComponent playerName={user.nickname} className="w-full" />
+          <PlayerComponent
+            key={user.nickname}
+            playerName={user.nickname}
+            className="w-full"
+          />
         ))}
       </main>
     </Page>

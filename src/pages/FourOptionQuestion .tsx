@@ -4,35 +4,69 @@ import EduquizLogo from "../components/EduquizLogo";
 import Page from "../components/Page";
 import SettingsButton from "../components/SettingsButton";
 import TimeComponent from "../components/TimeComponent";
-import { setLocalStorage } from "../services/localstorage-controller";
+import {
+  getLocalStorage,
+  setLocalStorage,
+} from "../services/localstorage-controller";
 import { socket } from "../services/socket";
 import { useLocation, useNavigate } from "react-router-dom";
-
-// TODO: componentize Answer Buttons
 
 export default function FourOptionQuestion() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { question } = location.state.data;
-  const level = "elementarySchool";
+  const pin = getLocalStorage("pin");
+  const { question, currentQuestion } = location.state.data;
+  console.log(location.state.data);
+
+  type emitAnswerProps = {
+    status: "correct" | "wrong";
+    answerNumber: 1 | 2 | 3 | 4;
+    correct: boolean;
+  };
+
+  function emitAnswer({ status, answerNumber, correct }: emitAnswerProps) {
+    const mapAnswer = {
+      1: "opcaoA",
+      2: "opcaoB",
+      3: "opcaoC",
+      4: "opcaoD",
+    };
+
+    // Fazer requisição ao CCWS
+    const url = `htttp://host/tv3/current-service/apps/100/nodes/${mapAnswer[answerNumber]}`;
+
+    fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        action: "select",
+      }),
+    });
+
+    socket.emit("send-answer", {
+      pin,
+      answerNumber,
+      correct,
+    });
+
+    navigate("/ResultQuestion", {
+      state: {
+        data: {
+          status: status,
+        },
+      },
+    });
+  }
 
   function handleAnswer(answerNumber: 1 | 2 | 3 | 4) {
-    if (answerNumber == question[level].correctAnswer) {
-      navigate("/ResultQuestion", {
-        state: {
-          data: {
-            status: "correct",
-          },
-        },
-      });
+    // Se a resposta está certa
+    if (answerNumber == question.correctAnswer) {
+      emitAnswer({ answerNumber, status: "correct", correct: true });
     } else {
-      navigate("/ResultQuestion", {
-        state: {
-          data: {
-            status: "wrong",
-          },
-        },
-      });
+      // Se a resposta está errada
+      emitAnswer({ answerNumber, status: "wrong", correct: false });
     }
   }
 
@@ -58,7 +92,7 @@ export default function FourOptionQuestion() {
       <header>
         <div className="flex justify-between">
           <div className="bg-white rounded-full p-4 text-sky-600 text-2xl font-bold">
-            1/10
+            {currentQuestion + 1}/6
           </div>
 
           <SettingsButton />
@@ -110,7 +144,7 @@ export default function FourOptionQuestion() {
           </AnswerButton>
         </div>
 
-        <TimeComponent time={20} />
+        <TimeComponent time={60} />
       </main>
     </Page>
   );

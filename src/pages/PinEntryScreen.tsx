@@ -14,6 +14,7 @@ import {
   setLocalStorage,
 } from "../services/localstorage-controller";
 import { socket } from "../services/socket";
+import { useEffect, useState } from "react";
 
 const loginRoomSchema = z.object({
   pin: z.string().length(4),
@@ -23,21 +24,37 @@ type LoginRoomSchema = z.infer<typeof loginRoomSchema>;
 
 export default function PinEntryScreen() {
   const navigate = useNavigate();
+  const [errorState, setErrorState] = useState();
   const { register, handleSubmit } = useForm<LoginRoomSchema>({
     resolver: zodResolver(loginRoomSchema),
   });
 
   function handLoginRoom(formData: LoginRoomSchema) {
-    setLocalStorage("pin", formData.pin);
     const user = getLocalStorage("user");
+    setLocalStorage("pin", formData.pin);
 
     socket.emit("login", {
       pin: formData.pin,
       user,
     });
-
-    navigate("/LoadingScreen");
   }
+
+  useEffect(() => {
+    socket.on("room-credentials", (data) => {
+      const { url, error } = data;
+
+      if (error) {
+        setErrorState(error);
+      } else {
+        setLocalStorage("url", url);
+        navigate("/LoadingScreen");
+      }
+    });
+
+    return () => {
+      socket.off("room-credentials");
+    };
+  }, []);
 
   return (
     <Page>
@@ -49,6 +66,11 @@ export default function PinEntryScreen() {
         onSubmit={handleSubmit(handLoginRoom)}
         className="flex flex-col items-center justify-center h-full gap-y-16"
       >
+        {errorState && (
+          <span className="text-red-600 font-bold bg-red-100 p-4 rounded flex border-2 border-red-600">
+            {errorState}
+          </span>
+        )}
         {/* Inputs */}
         <div className="flex flex-col gap-y-4 w-full mb-28 ">
           <div

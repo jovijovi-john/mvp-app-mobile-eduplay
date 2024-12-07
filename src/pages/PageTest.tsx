@@ -4,7 +4,6 @@ import { socket } from "../services/socket";
 export default function PageTest() {
   function startQuestion() {
     socket.emit("start-question", {
-      questionNumber: "1",
       pin: "1234",
     });
   }

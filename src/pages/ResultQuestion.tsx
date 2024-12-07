@@ -53,9 +53,7 @@ export default function ResultQuestion() {
 
   useEffect(() => {
     socket.on("current-question", (data) => {
-      setLocalStorage("current-question", data);
-
-      console.log(data);
+      setLocalStorage("current-question", data.currentQuestion);
 
       // If the question has twp options, increase a if-else here
       navigate("/FourOptionQuestion", {
